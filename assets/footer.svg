@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="148" viewBox="0 0 1200 148" role="img" aria-labelledby="title desc">
+  <title id="title">End of transmission</title>
+  <desc id="desc">An animated blue and pink signal waveform.</desc>
+  <defs>
+    <linearGradient id="line" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7897df" stop-opacity="0"/>
+      <stop offset="0.25" stop-color="#7897df"/>
+      <stop offset="0.72" stop-color="#e8a5d2"/>
+      <stop offset="1" stop-color="#e8a5d2" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-200%" width="140%" height="500%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="1200" height="148" rx="18" fill="#0b1425"/>
+  <path d="M0 72H224l16-1 13-2 11-7 10-21 12 59 12-74 12 99 13-68 12 24 15-9 14-2h130l15-1 12-4 11-12 11 37 12-68 13 104 12-81 13 41 14-13 16-3h298" fill="none" stroke="url(#line)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" stroke-dasharray="1400" stroke-dashoffset="1400">
+    <animate attributeName="stroke-dashoffset" values="1400;0" dur="3.8s" fill="freeze"/>
+  </path>
+  <circle cx="286" cy="100" r="3" fill="#87a7ed">
+    <animate attributeName="opacity" values=".25;1;.25" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="626" cy="22" r="3" fill="#eba8d4">
+    <animate attributeName="opacity" values="1;.25;1" dur="2.4s" repeatCount="indefinite"/>
+  </circle>
+  <text x="600" y="129" text-anchor="middle" fill="#8397c4" font-family="SFMono-Regular,Consolas,Liberation Mono,monospace" font-size="10" letter-spacing="4">END OF TRANSMISSION · KEEP BUILDING</text>
+</svg>
