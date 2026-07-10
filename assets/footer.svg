@@ -14,14 +14,18 @@
     </filter>
   </defs>
   <rect width="1200" height="148" rx="18" fill="#0b1425"/>
-  <path d="M0 72H224l16-1 13-2 11-7 10-21 12 59 12-74 12 99 13-68 12 24 15-9 14-2h130l15-1 12-4 11-12 11 37 12-68 13 104 12-81 13 41 14-13 16-3h298" fill="none" stroke="url(#line)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" stroke-dasharray="1400" stroke-dashoffset="1400">
-    <animate attributeName="stroke-dashoffset" values="1400;0" dur="3.8s" fill="freeze"/>
+  <path d="M0 72H224l16-1 13-2 11-7 10-21 12 59 12-74 12 99 13-68 12 24 15-9 14-2h130l15-1 12-4 11-12 11 37 12-68 13 104 12-81 13 41 14-13 16-3h298" fill="none" stroke="#7897df" stroke-opacity="0.17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M0 72H224l16-1 13-2 11-7 10-21 12 59 12-74 12 99 13-68 12 24 15-9 14-2h130l15-1 12-4 11-12 11 37 12-68 13 104 12-81 13 41 14-13 16-3h298" fill="none" stroke="url(#line)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" stroke-dasharray="180 1420" stroke-dashoffset="180">
+    <animate attributeName="stroke-dashoffset" values="180;-1420" dur="3.6s" repeatCount="indefinite"/>
   </path>
+  <circle r="4" fill="#f1b0da" filter="url(#glow)">
+    <animateMotion path="M0 72H224l16-1 13-2 11-7 10-21 12 59 12-74 12 99 13-68 12 24 15-9 14-2h130l15-1 12-4 11-12 11 37 12-68 13 104 12-81 13 41 14-13 16-3h298" dur="3.6s" repeatCount="indefinite"/>
+  </circle>
   <circle cx="286" cy="100" r="3" fill="#87a7ed">
     <animate attributeName="opacity" values=".25;1;.25" dur="2s" repeatCount="indefinite"/>
   </circle>
   <circle cx="626" cy="22" r="3" fill="#eba8d4">
     <animate attributeName="opacity" values="1;.25;1" dur="2.4s" repeatCount="indefinite"/>
   </circle>
-  <text x="600" y="129" text-anchor="middle" fill="#8397c4" font-family="SFMono-Regular,Consolas,Liberation Mono,monospace" font-size="10" letter-spacing="4">END OF TRANSMISSION · KEEP BUILDING</text>
+  <text x="600" y="129" text-anchor="middle" fill="#8397c4" font-family="SFMono-Regular,Consolas,Liberation Mono,monospace" font-size="10" letter-spacing="4">LIVE SIGNAL · KEEP BUILDING</text>
 </svg>

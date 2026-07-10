@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="200" viewBox="0 0 520 200" role="img" aria-labelledby="title desc">
+  <title id="title">Rainchen's GitHub stats</title>
+  <desc id="desc">14 public repositories, 4 stars, 0 followers, active since 2020.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1425"/>
+      <stop offset="1" stop-color="#111c35"/>
+    </linearGradient>
+    <linearGradient id="edge" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#8faef1"/>
+      <stop offset="1" stop-color="#e8a8d3"/>
+    </linearGradient>
+    <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M24 0H0V24" fill="none" stroke="#9db6ed" stroke-opacity="0.055"/>
+    </pattern>
+    <filter id="glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect x="1" y="1" width="518" height="198" rx="16" fill="url(#bg)" stroke="url(#edge)" stroke-opacity="0.55"/>
+  <rect x="1" y="1" width="518" height="198" rx="16" fill="url(#grid)"/>
+  <path d="M1 45V17Q1 1 17 1H50 M470 199H503Q519 199 519 183V155" fill="none" stroke="url(#edge)" stroke-width="2"/>
+  <g font-family="SFMono-Regular,Consolas,Liberation Mono,monospace">
+    <text x="24" y="31" fill="#9db5e7" font-size="10" letter-spacing="2.4">SYSTEM METRICS / LIVE</text>
+    <circle cx="196" cy="27" r="3.5" fill="#eca9d4" filter="url(#glow)"><animate attributeName="opacity" values="1;.25;1" dur="1.8s" repeatCount="indefinite"/></circle>
+    <line x1="24" y1="47" x2="496" y2="47" stroke="#90a9df" stroke-opacity="0.2"/>
+    <g transform="translate(24 68)">
+      <g><text x="0" y="13" fill="#7890c2" font-size="9" letter-spacing="1.5">PUBLIC REPOS</text><text x="0" y="57" fill="#eef3ff" font-size="36" font-weight="700">14</text></g>
+      <g transform="translate(126 0)"><text x="0" y="13" fill="#7890c2" font-size="9" letter-spacing="1.5">TOTAL STARS</text><text x="0" y="57" fill="#eef3ff" font-size="36" font-weight="700">4</text></g>
+      <g transform="translate(252 0)"><text x="0" y="13" fill="#7890c2" font-size="9" letter-spacing="1.5">FOLLOWERS</text><text x="0" y="57" fill="#eef3ff" font-size="36" font-weight="700">0</text></g>
+      <g transform="translate(378 0)"><text x="0" y="13" fill="#7890c2" font-size="9" letter-spacing="1.5">SINCE</text><text x="0" y="57" fill="#eef3ff" font-size="28" font-weight="700">2020</text></g>
+    </g>
+    <rect x="24" y="153" width="472" height="24" rx="7" fill="#0a1324" stroke="#92ade8" stroke-opacity="0.2"/>
+    <text x="38" y="169" fill="#879ece" font-size="9" letter-spacing="1.2">PRIMARY STACK</text>
+    <text x="466" y="169" text-anchor="end" fill="#e9c2df" font-size="10" letter-spacing="1.2">SWIFT / MACOS NATIVE</text>
+  </g>
+</svg>

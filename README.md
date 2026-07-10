@@ -1,8 +1,4 @@
 <p align="center">
-  <img src="./assets/hero.svg" width="100%" alt="Rainchen — macOS software maker" />
-</p>
-
-<p align="center">
   <a href="https://www.pixiv.net/artworks/139667080">
     <img src="./assets/atmosphere-card.svg" width="100%" alt="你好，我是雨晨 — snowy mountains profile card" />
   </a>
@@ -45,8 +41,8 @@ SIGNAL     open to ideas · always building
 ## `> telemetry`
 
 <p align="center">
-  <img height="170" alt="Rainchen's GitHub stats" src="https://github-profile-summary-cards.vercel.app/api/cards/stats?username=Rainchen537&theme=github_dark" />
-  <img height="170" alt="Rainchen's repositories by language" src="https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=Rainchen537&theme=github_dark" />
+  <img height="180" alt="Rainchen's GitHub stats" src="./assets/github-stats.svg" />
+  <img height="180" alt="Rainchen's repositories by language" src="./assets/language-map.svg" />
 </p>
 
 <p align="center">
