@@ -8,10 +8,15 @@
 
 <a href="https://bnbu.yunwai.cloud/">
   <picture>
-    <source media="(max-width: 600px)" srcset="./assets/project-bnbu.mobile.svg" />
-    <img src="./assets/project-bnbu.svg" width="100%" alt="BNBU.ME — 校园客户端与小U AI助手；iOS、Android、macOS、Windows。查看官网。" />
+    <source media="(max-width: 600px)" srcset="./assets/project-bnbu-logo.mobile.svg" />
+    <img src="./assets/project-bnbu-logo.svg" width="100%" alt="BNBU.ME — 校园客户端与小U AI助手；iOS、Android、macOS、Windows。查看官网。" />
   </picture>
 </a>
+
+<picture>
+  <source media="(max-width: 600px)" srcset="./assets/project-polaris.mobile.svg" />
+  <img src="./assets/project-polaris.svg" width="100%" alt="Polaris — 跨平台连接工具。" />
+</picture>
 
 <a href="https://github.com/Rainchen537/Y-Clip">
   <picture>

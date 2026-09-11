@@ -34,22 +34,35 @@ def hero():
     (ASSETS/'profile-hero.svg').write_text(template.replace('__BACKGROUND_DATA__',data))
 
 def bnbu(mobile=False):
-    w,h=(720,372) if mobile else (1200,294)
-    x=44 if mobile else 56
+    w,h=(720,400) if mobile else (1200,294)
     body=f'''<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#152a48"/><stop offset="1" stop-color="#161d35"/></linearGradient></defs>
-    <rect x="1" y="1" width="{w-2}" height="{h-2}" rx="24" fill="url(#bg)" stroke="#394c6c"/>
-    <rect x="{x}" y="43" width="38" height="4" rx="2" fill="#b7d2f5"/>'''
-    body+=text(x,132,'BNBU.ME',64 if mobile else 70,'paper',DISPLAY,700,1)
-    body+=text(x,192,'校园客户端 · 小U AI 助手',32,'blue')
-    body+=text(x,252 if mobile else 250,'FLUTTER / PYTHON',21,'muted',MONO,spacing=1)
+    <rect x="1" y="1" width="{w-2}" height="{h-2}" rx="24" fill="url(#bg)" stroke="#394c6c"/>'''
+    body+=image('bnbu.png',28,30 if mobile else 48,160 if mobile else 192,160 if mobile else 192)
+    body+=text(198 if mobile else 256,132,'BNBU.ME',58 if mobile else 66,'paper',DISPLAY,700,1)
+    body+=text(44 if mobile else 256,236 if mobile else 192,'校园客户端 · 小U AI 助手',32 if mobile else 30,'blue')
+    body+=text(44 if mobile else 256,292 if mobile else 250,'FLUTTER / PYTHON',21,'muted',MONO,spacing=1)
     if mobile:
-        body+=text(x,322,'iOS · Android · macOS · Windows',25,'paper',DISPLAY)
+        body+=text(44,352,'iOS · Android · macOS · Windows',25,'paper',DISPLAY)
     else:
-        body+='<path d="M760 56V238" stroke="#394c6c"/>'
-        body+=text(810,120,'iOS / Android',34,'paper',DISPLAY,500)
-        body+=text(810,175,'macOS / Windows',34,'paper',DISPLAY,500)
+        body+='<path d="M780 56V238" stroke="#394c6c"/>'
+        body+=text(824,120,'iOS / Android',32,'paper',DISPLAY,500)
+        body+=text(824,175,'macOS / Windows',32,'paper',DISPLAY,500)
     body+=arrow(w-82,60)
-    save('project-bnbu'+('.mobile' if mobile else '')+'.svg',w,h,'BNBU.ME — 校园客户端与小U AI助手；iOS、Android、macOS、Windows',body)
+    save('project-bnbu-logo'+('.mobile' if mobile else '')+'.svg',w,h,'BNBU.ME — 校园客户端与小U AI助手；iOS、Android、macOS、Windows',body)
+
+def polaris(mobile=False):
+    w,h=(720,230) if mobile else (1200,188)
+    body=f'<rect x="1" y="1" width="{w-2}" height="{h-2}" rx="22" fill="#101a2c" stroke="#33415b"/>'
+    body+=image('polaris.png',30 if mobile else 34,44 if mobile else 30,128,128)
+    tx=184 if mobile else 202
+    body+=text(tx,91 if mobile else 80,'Polaris',44,'paper',DISPLAY,600)
+    body+=text(tx,139 if mobile else 127,'跨平台连接工具',30,'blue')
+    if mobile:
+        body+=text(tx,184,'Cross-platform',23,'muted',DISPLAY)
+    else:
+        body+=text(775,94,'Cross-platform',28,'paper',DISPLAY)
+        body+=text(775,131,'FLUTTER',20,'muted',MONO)
+    save('project-polaris'+('.mobile' if mobile else '')+'.svg',w,h,'Polaris — 跨平台连接工具',body)
 
 PROJECTS=[('y-clip','Y-Clip','剪贴板历史','SWIFT / APPKIT'),('y-dock','Y-Dock','窗口预览与切换','SWIFT / APPKIT'),('y-keys','Y-Keys','快捷键速查','SWIFT / APPKIT')]
 def project(key,name,label,stack,mobile=False):
@@ -72,5 +85,6 @@ if __name__=='__main__':
     hero()
     for mobile in (False,True):
         bnbu(mobile)
+        polaris(mobile)
         for p in PROJECTS:project(*p,mobile=mobile)
-    print('Rendered 9 profile SVGs.')
+    print('Rendered 11 profile SVGs.')
