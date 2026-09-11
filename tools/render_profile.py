@@ -80,7 +80,7 @@ def project(key,name,label,stack,mobile=False):
         body+=f'<g transform="translate({ix} {iy})"><rect x="8" y="8" width="112" height="112" rx="26" fill="#263750" stroke="#55678b"/><path d="M36 40l20 20-20 20m32 0h26" fill="none" stroke="#d1bae2" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></g>'
     else:
         body+=image(key+'.png',30 if mobile else 34,44 if mobile else 30,128,128)
-    platform='Linux' if key == 'zhilian' else 'macOS' 
+    platform='Linux' if key == 'zhilian' else 'macOS'
     tx=184 if mobile else 202
     body+=text(tx,91 if mobile else 80,name,44,'paper',DISPLAY,600)
     body+=text(tx,139 if mobile else 127,label,30,'blue')
