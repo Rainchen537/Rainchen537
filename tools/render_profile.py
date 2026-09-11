@@ -31,7 +31,7 @@ def arrow(x,y):
 def hero():
     template=(ASSETS/'atmosphere-card.template.svg').read_text()
     data=base64.b64encode((ASSETS/'atmosphere.jpg').read_bytes()).decode()
-    (ASSETS/'atmosphere-card.svg').write_text(template.replace('__BACKGROUND_DATA__',data))
+    (ASSETS/'profile-hero.svg').write_text(template.replace('__BACKGROUND_DATA__',data))
 
 def bnbu(mobile=False):
     w,h=(720,372) if mobile else (1200,294)

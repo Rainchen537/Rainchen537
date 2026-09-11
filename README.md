@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://www.pixiv.net/artworks/139667080">
-    <img src="./assets/atmosphere-card.svg?v=fe170e7" width="100%" alt="你好，我是雨晨。独立开发者，关注跨平台产品、AI 与基础设施。" />
+    <img src="./assets/profile-hero.svg" width="100%" alt="你好，我是雨晨。独立开发者，关注跨平台产品、AI 与基础设施。" />
   </a>
 </p>
 
