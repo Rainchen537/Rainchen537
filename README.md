@@ -15,7 +15,7 @@
 
 <picture>
   <source media="(max-width: 600px)" srcset="./assets/project-polaris.mobile.svg" />
-  <img src="./assets/project-polaris.svg" width="100%" alt="Polaris — 跨平台连接工具。" />
+  <img src="./assets/project-polaris.svg" width="100%" alt="Polaris 🤫 — 跨平台连接工具。" />
 </picture>
 
 <a href="https://github.com/Rainchen537/Y-Clip">

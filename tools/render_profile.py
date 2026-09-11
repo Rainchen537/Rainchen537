@@ -55,14 +55,14 @@ def polaris(mobile=False):
     body=f'<rect x="1" y="1" width="{w-2}" height="{h-2}" rx="22" fill="#101a2c" stroke="#33415b"/>'
     body+=image('polaris.png',30 if mobile else 34,44 if mobile else 30,128,128)
     tx=184 if mobile else 202
-    body+=text(tx,91 if mobile else 80,'Polaris',44,'paper',DISPLAY,600)
+    body+=text(tx,91 if mobile else 80,'Polaris 🤫',44,'paper',DISPLAY,600)
     body+=text(tx,139 if mobile else 127,'跨平台连接工具',30,'blue')
     if mobile:
         body+=text(tx,184,'Cross-platform',23,'muted',DISPLAY)
     else:
         body+=text(775,94,'Cross-platform',28,'paper',DISPLAY)
         body+=text(775,131,'FLUTTER',20,'muted',MONO)
-    save('project-polaris'+('.mobile' if mobile else '')+'.svg',w,h,'Polaris — 跨平台连接工具',body)
+    save('project-polaris'+('.mobile' if mobile else '')+'.svg',w,h,'Polaris 🤫 — 跨平台连接工具',body)
 
 PROJECTS=[('y-clip','Y-Clip','剪贴板历史','SWIFT / APPKIT'),('y-dock','Y-Dock','窗口预览与切换','SWIFT / APPKIT'),('y-keys','Y-Keys','快捷键速查','SWIFT / APPKIT')]
 def project(key,name,label,stack,mobile=False):
