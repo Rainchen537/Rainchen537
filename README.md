@@ -1,7 +1,8 @@
-<picture>
-  <source media="(max-width: 600px)" srcset="./assets/atmosphere-card.mobile.svg" />
-  <img src="./assets/atmosphere-card.svg" width="100%" alt="你好，我是雨晨。独立开发者，关注跨平台产品、AI 与基础设施。" />
-</picture>
+<p align="center">
+  <a href="https://www.pixiv.net/artworks/139667080">
+    <img src="./assets/atmosphere-card.svg" width="100%" alt="你好，我是雨晨。独立开发者，关注跨平台产品、AI 与基础设施。" />
+  </a>
+</p>
 
 <p align="right"><sub><a href="https://www.pixiv.net/artworks/139667080">A long walk</a> · <a href="https://www.pixiv.net/users/39363802">mmAir</a></sub></p>
 
@@ -9,13 +10,6 @@
   <picture>
     <source media="(max-width: 600px)" srcset="./assets/project-bnbu.mobile.svg" />
     <img src="./assets/project-bnbu.svg" width="100%" alt="BNBU.ME — 校园客户端与小U AI助手；iOS、Android、macOS、Windows。查看官网。" />
-  </picture>
-</a>
-
-<a href="https://github.com/Rainchen537/zhilian">
-  <picture>
-    <source media="(max-width: 600px)" srcset="./assets/project-zhilian.mobile.svg" />
-    <img src="./assets/project-zhilian.svg" width="100%" alt="zhilian — Linux 上的 DDNS 与网络配置脚本。查看源代码。" />
   </picture>
 </a>
 

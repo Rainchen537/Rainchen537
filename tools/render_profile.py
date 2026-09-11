@@ -28,30 +28,10 @@ def save(name,w,h,title,body):
 def arrow(x,y):
     return f'<path d="M{x} {y+22}l28-28m-28 0h28v28" fill="none" stroke="{C["blue"]}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>'
 
-def hero(mobile=False):
-    w,h=(720,760) if mobile else (1200,620)
-    margin=48 if mobile else 64
-    body=f'''<defs>
-      <clipPath id="frame"><rect width="{w}" height="{h}" rx="24"/></clipPath>
-      <linearGradient id="shade" x1="0" y1="0" x2="0" y2="1">
-        <stop stop-color="#091428" stop-opacity=".72"/>
-        <stop offset=".58" stop-color="#101a32" stop-opacity=".13"/>
-        <stop offset="1" stop-color="#101a32" stop-opacity=".2"/>
-      </linearGradient>
-    </defs><g clip-path="url(#frame)">'''
-    # The original illustration is preserved, only framing and SVG typography change.
-    body+=image('atmosphere.jpg',0,0,w,h)
-    body+=f'<rect width="{w}" height="{h}" fill="url(#shade)"/>'
-    body+=text(margin,76,'RAINCHEN',24,'blue',MONO,spacing=4)
-    body+=text(margin,206 if mobile else 216,'你好，我是雨晨。',62 if mobile else 84,weight=600)
-    if mobile:
-        body+=text(margin,273,'独立开发者',34,'paper')
-        body+=text(margin,324,'跨平台产品 · AI · 基础设施',30,'paper')
-    else:
-        body+=text(margin,284,'独立开发者 / 跨平台产品 · AI · 基础设施',30,'paper')
-    body+='</g>'
-    body+=f'<rect x=".5" y=".5" width="{w-1}" height="{h-1}" rx="24" fill="none" stroke="#b7d2f5" stroke-opacity=".3"/>'
-    save('atmosphere-card'+('.mobile' if mobile else '')+'.svg',w,h,'雨晨 Rainchen — 独立开发者；跨平台产品、AI、基础设施',body)
+def hero():
+    template=(ASSETS/'atmosphere-card.template.svg').read_text()
+    data=base64.b64encode((ASSETS/'atmosphere.jpg').read_bytes()).decode()
+    (ASSETS/'atmosphere-card.svg').write_text(template.replace('__BACKGROUND_DATA__',data))
 
 def bnbu(mobile=False):
     w,h=(720,372) if mobile else (1200,294)
@@ -71,16 +51,12 @@ def bnbu(mobile=False):
     body+=arrow(w-82,60)
     save('project-bnbu'+('.mobile' if mobile else '')+'.svg',w,h,'BNBU.ME — 校园客户端与小U AI助手；iOS、Android、macOS、Windows',body)
 
-PROJECTS=[('zhilian','zhilian','DDNS 与网络配置','SHELL / LINUX'),('y-clip','Y-Clip','剪贴板历史','SWIFT / APPKIT'),('y-dock','Y-Dock','窗口预览与切换','SWIFT / APPKIT'),('y-keys','Y-Keys','快捷键速查','SWIFT / APPKIT')]
+PROJECTS=[('y-clip','Y-Clip','剪贴板历史','SWIFT / APPKIT'),('y-dock','Y-Dock','窗口预览与切换','SWIFT / APPKIT'),('y-keys','Y-Keys','快捷键速查','SWIFT / APPKIT')]
 def project(key,name,label,stack,mobile=False):
     w,h=(720,230) if mobile else (1200,188)
     body=f'<rect x="1" y="1" width="{w-2}" height="{h-2}" rx="22" fill="#101a2c" stroke="#33415b"/>'
-    if key == 'zhilian':
-        ix,iy=(30,44) if mobile else (34,30)
-        body+=f'<g transform="translate({ix} {iy})"><rect x="8" y="8" width="112" height="112" rx="26" fill="#263750" stroke="#55678b"/><path d="M36 40l20 20-20 20m32 0h26" fill="none" stroke="#d1bae2" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></g>'
-    else:
-        body+=image(key+'.png',30 if mobile else 34,44 if mobile else 30,128,128)
-    platform='Linux' if key == 'zhilian' else 'macOS'
+    body+=image(key+'.png',30 if mobile else 34,44 if mobile else 30,128,128)
+    platform='macOS'
     tx=184 if mobile else 202
     body+=text(tx,91 if mobile else 80,name,44,'paper',DISPLAY,600)
     body+=text(tx,139 if mobile else 127,label,30,'blue')
@@ -93,7 +69,8 @@ def project(key,name,label,stack,mobile=False):
     save('project-'+key+('.mobile' if mobile else '')+'.svg',w,h,name+' — '+label+'；'+platform,body)
 
 if __name__=='__main__':
+    hero()
     for mobile in (False,True):
-        hero(mobile);bnbu(mobile)
+        bnbu(mobile)
         for p in PROJECTS:project(*p,mobile=mobile)
-    print('Rendered 12 profile SVGs.')
+    print('Rendered 9 profile SVGs.')

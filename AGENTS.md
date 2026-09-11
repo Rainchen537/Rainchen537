@@ -4,11 +4,12 @@
 
 ## 文件职责
 
-- `README.md`：唯一公开主页入口，维护图片替代文本、项目链接和插画署名；手机通过 `picture` 的 `max-width: 600px` 选择专用资源。
-- `tools/render_profile.py`：SVG 布局、颜色、字体与卡片文案的唯一生成源。生成后提交 SVG；不要只改产物。
+- `README.md`：唯一公开主页入口，维护图片替代文本、项目链接和插画署名；项目卡片在手机通过 `picture` 的 `max-width: 600px` 选择专用资源；顶部保留原版卡片布局。
+- `assets/atmosphere-card.template.svg`：顶部卡片的唯一布局与文案来源；保留原版面板、边框和动效。
+- `tools/render_profile.py`：内嵌顶部背景并生成项目卡片；项目卡片的布局、颜色、字体与文案在此维护。生成后提交 SVG，不要只改产物。
 - `assets/atmosphere.jpg`：既有背景插画，署名及作品链接保留在 README。
 - `assets/y-clip.png`、`y-dock.png`、`y-keys.png`：既有项目图标。
-- `assets/*.svg`：生成的桌面／手机静态资源，使用内嵌图片，不依赖远程字体、脚本或统计服务。
+- `assets/*.svg`：生成的顶部与桌面／手机项目资源，使用内嵌图片，不依赖远程字体、脚本或统计服务。
 - `log.md`：按日期倒序记录已完成的维护和验证，不代替当前页面内容。
 - `AGENTS.md`：本文件，维护文件职责和后续修改规则。
 
