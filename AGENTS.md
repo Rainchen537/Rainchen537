@@ -9,7 +9,7 @@
 - `tools/render_profile.py`：内嵌顶部背景并生成项目卡片；项目卡片的布局、颜色、字体与文案在此维护。生成后提交 SVG，不要只改产物。
 - `assets/atmosphere.jpg`：既有背景插画，署名及作品链接保留在 README。
 - `assets/bnbu.png`：BNBU.ME 当前 macOS 应用图标。
-- `assets/polaris.png`：Polaris 既有品牌图标，仅用于经用户批准的简要展示。
+- `assets/polaris.png`：保留的 Polaris 品牌图标，当前不在 README 展示。
 - `assets/y-clip.png`、`y-dock.png`、`y-keys.png`：既有项目图标。
 - `assets/*.svg`：生成的顶部与桌面／手机项目资源，使用内嵌图片，不依赖远程字体、脚本或统计服务。
 - `log.md`：按日期倒序记录已完成的维护和验证，不代替当前页面内容。
@@ -21,7 +21,7 @@
 - 不添加心电图、虚构在线状态、硬编码粉丝／Stars／语言占比和容易过时的年龄或构建日期。
 - 项目描述先核对公开产品入口或仓库内容；不要把私有源码或内部运维数据复制到本仓库。
 - BNBU.ME 作为首张重点卡片；公开项目卡片链接到实际官网或公开仓库，所有图片有可读的替代文本。
-- Polaris 按用户要求仅展示名称、Logo 和“跨平台连接工具”，不添加服务入口、私有仓库链接或业务细节。
+- Polaris 当前不在 README 展示；重新加入卡片时先确认用户意图，不添加私有仓库链接或业务细节。
 - 不增加 GitHub Actions；本机生成和验证即可。
 
 ## 生成与验证
