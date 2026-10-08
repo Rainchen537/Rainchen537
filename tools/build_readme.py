@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Build the English pixel profile. Python standard library; no network access."""
 from pathlib import Path
-import base64
 import html
 import xml.etree.ElementTree as ET
 
@@ -9,8 +8,8 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'assets/pixel'
 SOURCE = OUT / 'source'
 BG, PANEL, LINE = '#0a0d19', '#101628', '#2c3855'
+PIXEL_PAPER = '#0d1117'
 INK, MUTED, PURPLE, CYAN = '#edf2ff', '#a0adc5', '#ae93ff', '#72e4fa'
-FONT = '-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif'
 # Five-column bitmap alphabet: vector paths keep headings identical on GitHub.
 GLYPHS = dict(zip('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', [
  '01110 10001 10001 11111 10001 10001 10001',
@@ -55,6 +54,8 @@ GLYPHS.update({
  '/': '00001 00001 00010 00100 01000 10000 10000',
  '-': '00000 00000 00000 11111 00000 00000 00000',
  '>': '10000 01000 00100 00010 00100 01000 10000',
+ '#': '01010 01010 11111 01010 11111 01010 01010',
+ '+': '00000 00100 00100 11111 00100 00100 00000',
 })
 
 PROJECTS = [
@@ -86,22 +87,9 @@ def px(value, x, y, size=2, color=INK):
     return f'<path d="{"".join(d)}" fill="{color}"/>'
 
 
-def text(value, x, y, size=18, color=MUTED, weight=400, anchor='start'):
-    return f'<text x="{x}" y="{y}" font-family="{FONT}" font-size="{size}" font-weight="{weight}" fill="{color}" text-anchor="{anchor}">{html.escape(value)}</text>'
-
-
-def panel(x, y, w, h, fill=PANEL, cut=10):
-    return f'<path d="M{x+cut} {y}H{x+w-cut}V{y+cut}H{x+w}V{y+h-cut}H{x+w-cut}V{y+h}H{x+cut}V{y+h-cut}H{x}V{y+cut}H{x+cut}Z" fill="{fill}" stroke="{LINE}"/>'
-
-
-def image(path, x, y, w, h):
-    data = base64.b64encode(path.read_bytes()).decode()
-    return f'<image x="{x}" y="{y}" width="{w}" height="{h}" href="data:image/png;base64,{data}"/>'
-
-
 def icon(key, x, y, size):
     if key == 'bnbu':
-        return image(ROOT / 'assets/bnbu.png', x, y, size, size)
+        return ''
     raw = (SOURCE / f'{key}.svg').read_text()
     inner = raw[raw.index('>')+1:raw.rindex('</svg>')]
     return f'<svg x="{x}" y="{y}" width="{size}" height="{size}" viewBox="35 20 145 150">{inner}</svg>'
@@ -109,7 +97,7 @@ def icon(key, x, y, size):
 
 def svg(w, h, title, body):
     title = html.escape(title, quote=True)
-    return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" role="img" aria-label="{title}"><title>{title}</title>{body}</svg>\n'
+    return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" shape-rendering="crispEdges" role="img" aria-label="{title}"><title>{title}</title>{body}</svg>\n'
 
 
 def write(name, content):
@@ -117,55 +105,70 @@ def write(name, content):
     (OUT / name).write_text(content)
 
 
+def dot_rule(w, y, color=LINE):
+    return ''.join(f'<rect x="{x}" y="{y}" width="2" height="2" fill="{color}"/>' for x in range(24,w-24,8))
+
+
+def pixel_label(value, x, y, size, color=INK):
+    # One-pixel shadow is part of the letter bitmap, not a UI panel.
+    return px(value,x+size,y+size,size,'#18243c')+px(value,x,y,size,color)
+
+
 def card(p, mobile):
-    w = 600 if mobile else 1120
-    has_note = 'note' in p
-    h = (268 if has_note else 238) if mobile else (196 if has_note else 166)
-    s = panel(1, 1, w-2, h-2)
-    s += f'<path d="M22 1H112" stroke="{p["color"]}" stroke-width="2"/>'
+    w=600 if mobile else 1120
+    has_note='note' in p
+    h=(186 if has_note else 150) if mobile else (142 if has_note else 112)
+    s=f'<rect width="{w}" height="{h}" fill="{PIXEL_PAPER}"/>'
+    x=26 if p['id']=='bnbu' else (112 if mobile else 122)
+    if p['id']!='bnbu': s+=icon(p['id'],28,27,58 if mobile else 60)
+    size=(3 if p['id']=='landirect' else 4) if mobile else 3
+    s+=pixel_label(p['title'],x,28,size,p['color'])
+    topic={'bnbu':'CAMPUS','y-clip':'CLIPBOARD','y-dock':'WINDOWS','y-keys':'SHORTCUTS','landirect':'LAN MOD'}[p['id']]
     if mobile:
-        s += icon(p['id'], 22, 22, 82)
-        title_size = 2.8 if p['id']=='landirect' else 4
-        s += px(p['title'], 128, 49, title_size)
-        s += text(p['desc'], 26, 140, 22)
-        if has_note:
-            s += text(p['note'], 26, 175, 19, '#8290aa')
-        s += text(p['tech'], 26, h-40, 19, p['color'])
-        s += text(p['platform'], 26, h-16, 18, '#8290aa')
+        s+=px(topic,x,74,2.5,MUTED)
+        s+=px(p['tech'],26,112,2.4,'#73829d')
+        platform='IOS / ANDROID / MACOS / WINDOWS' if p['id']=='bnbu' else p['platform']
+        s+=px(platform,26,137,2.2,MUTED)
+        if has_note:s+=px('UNOFFICIAL / DESKTOP PREVIEW' if p['id']=='bnbu' else 'EXPERIMENTAL / MULTIPLAYER UNVERIFIED',26,164,2.2,'#73829d')
     else:
-        s += icon(p['id'], 32, (h-104)/2, 104)
-        s += px(p['title'], 174, 31, 3)
-        s += text(p['desc'], 174, 90, 18)
-        if has_note:
-            s += text(p['note'], 174, 121, 15, '#8290aa')
-        s += text(p['tech'], 174, h-25, 15, p['color'])
-        s += text(p['platform'], w-30, h-25, 15, '#8290aa', anchor='end')
-    return svg(w, h, f'{p["title"]}: {p["desc"]}', s)
+        s+=px(topic,x,64,2,MUTED)
+        s+=px(p['tech'],520,31,2,'#73829d')
+        platform='IOS / ANDROID / MACOS / WINDOWS' if p['id']=='bnbu' else p['platform']
+        s+=px(platform,520,64,2,MUTED)
+        if has_note:s+=px('UNOFFICIAL / DESKTOP PREVIEW' if p['id']=='bnbu' else 'EXPERIMENTAL / MULTIPLAYER UNVERIFIED',x,104,2,'#73829d')
+    s+=px('>',w-43,31,2,p['color'])
+    return svg(w,h,f'{p["title"]}: {p["desc"]}',s)
 
 
 def section(label, mobile):
-    w, h = (600, 68) if mobile else (1120, 68)
-    s = f'<rect width="{w}" height="{h}" fill="{BG}"/>'
-    s += px('>', 12, 26, 2, PURPLE) + px(label, 42, 22, 3 if mobile else 2.5)
-    s += f'<path d="M0 64H{w}" stroke="{LINE}"/>'
+    w,h=(600,84) if mobile else (1120,76)
+    s=f'<rect width="{w}" height="{h}" fill="{PIXEL_PAPER}"/>'
+    s+=dot_rule(w,14)
+    s+=pixel_label(label,26,36,3 if mobile else 2.5,'#edce8b')
     return svg(w, h, label.title(), s)
 
 
 def stack(mobile):
-    w, h = (600, 244) if mobile else (1120, 126)
-    gap = 12
-    cols = 2 if mobile else 4
-    cw = (w-gap*(cols-1))/cols
-    s = ''
-    items = [('Swift / AppKit', 'macOS', PURPLE), ('Dart / Flutter', 'Cross-platform', CYAN),
-             ('C# / .NET', 'Game mods', '#96edc2'), ('Python / Git / Shell', 'Tooling', '#edce8b')]
-    for i,(name,domain,color) in enumerate(items):
-        x, y = (i%cols)*(cw+gap), (i//cols)*124
-        s += panel(x+1,y+1,cw-2,112)
-        s += f'<path d="M{x+20} {y+1}h40" stroke="{color}" stroke-width="2"/>'
-        s += text(name,x+20,y+48,22 if mobile else 18,INK,500)
-        s += text(domain,x+20,y+82,19 if mobile else 15,color)
+    w,h=(600,120) if mobile else (1120,72)
+    s=f'<rect width="{w}" height="{h}" fill="{PIXEL_PAPER}"/>'
+    names=['SWIFT / APPKIT','DART / FLUTTER','C# / .NET','PYTHON / GIT / SHELL']
+    colors=[PURPLE,CYAN,'#96edc2','#edce8b']
+    for i,(name,color) in enumerate(zip(names,colors)):
+        x,y=(26+(i%2)*292,26+(i//2)*46) if mobile else (26+i*278,24)
+        size=2.3 if mobile else 2
+        s+=px(name,x,y,size,color)
     return svg(w,h,'Swift / AppKit, Dart / Flutter, C# / .NET, Python / Git / Shell',s)
+
+
+def action(label):
+    w=len(label)*12+8
+    return svg(w,22,label,px(label,2,3,2,'#73829d'))
+
+
+def action_image(label,height=14,alt=None):
+    key=label.lower().replace(' ','-')
+    width=round((len(label)*12+8)*height/22)
+    return f'<img src="./assets/pixel/link-{key}.svg" width="{width}" height="{height}" alt="{alt or label.title()}" />'
 
 
 def picture(name, alt):
@@ -184,11 +187,12 @@ def main():
         write(f'stack{suffix}.svg',stack(mobile))
         for p in PROJECTS: write(f'project-{p["id"]}{suffix}.svg',card(p,mobile))
         w=600 if mobile else 1120
-        write(f'footer{suffix}.svg',svg(w,64,'Rainchen / GitHub',f'<path d="M0 1H{w}" stroke="{LINE}"/>'+px('RAINCHEN / GITHUB',12,28,2,'#73829d')))
+        write(f'footer{suffix}.svg',svg(w,70,'Rainchen / GitHub',f'<rect width="{w}" height="70" fill="{PIXEL_PAPER}"/>'+dot_rule(w,8)+px('RAINCHEN / GITHUB',26,37,2,'#73829d')))
+    for label in ('SOURCE','RELEASES','WEBSITE','COMPATIBILITY','TECH STACK','PROJECTS','STILL COVER','TEXT VERSION'):
+        write(f'link-{label.lower().replace(" ","-")}.svg',action(label))
     parts=['<!-- Generated by tools/build_readme.py. Edit the generator and source artwork. -->',
         '<p align="center">\n<picture>\n  <source media="(prefers-reduced-motion: reduce) and (max-width: 600px)" srcset="./assets/pixel/hero-mobile-poster.png" />\n  <source media="(prefers-reduced-motion: reduce)" srcset="./assets/pixel/hero-poster.png" />\n  <source media="(max-width: 600px)" srcset="./assets/pixel/hero-mobile.gif" />\n  <img src="./assets/pixel/hero.gif" width="1120" alt="Rainchen / Li Xingchen — independent developer. A pixel portrait with ENTJ, followed by five projects in the original particle animation." />\n</picture>\n</p>',
-        '<p align="center"><b>Rainchen / Li Xingchen</b><br /><sub>Independent developer</sub></p>',
-        '<p align="center"><a href="#tech-stack">Tech stack</a> · <a href="#selected-projects">Projects</a> · <a href="https://bnbu.me/">BNBU.ME</a> · <a href="./assets/pixel/hero-poster.png">Still cover</a></p>',
+        '<p align="center"><a href="#tech-stack">'+action_image('TECH STACK',18)+'</a> &nbsp; <a href="#selected-projects">'+action_image('PROJECTS',18)+'</a> &nbsp; <a href="https://bnbu.me/">'+action_image('WEBSITE',18,'BNBU.ME website')+'</a> &nbsp; <a href="./assets/pixel/hero-poster.png">'+action_image('STILL COVER',18)+'</a></p>',
         '<a name="tech-stack"></a>',picture('section-stack','Tech stack'),
         picture('stack','Swift / AppKit, Dart / Flutter, C# / .NET, Python / Git / Shell'),
         '<a name="selected-projects"></a>',picture('section-projects','Selected projects')]
@@ -196,14 +200,14 @@ def main():
         repo=f'https://github.com/Rainchen537/{p["repo"]}'
         parts.append(f'<a href="{repo}">\n'+picture('project-'+p['id'],p['title']+': '+p['desc']+' '+p.get('note',''))+'\n</a>')
         url=p.get('url',repo+'/releases'); label=p.get('link','Releases')
-        parts.append(f'<p align="right"><sub><a href="{repo}">Source</a> · <a href="{url}">{label}</a></sub></p>')
+        parts.append(f'<p align="right"><a href="{repo}">'+action_image('SOURCE')+f'</a> &nbsp; <a href="{url}">'+action_image(label.upper())+'</a></p>')
     parts.append(picture('footer','Rainchen / GitHub'))
-    parts.append('<details>\n<summary>Text version</summary>\n<p><b>Rainchen / Li Xingchen</b> — Independent developer. ENTJ is a self-described personality label.</p>')
+    parts.append('<details>\n<summary>'+action_image('TEXT VERSION')+'</summary>\n<p><b>Rainchen / Li Xingchen</b> — Independent developer. ENTJ is a self-described personality label.</p>')
     for p in PROJECTS:
         parts.append(f'<p><a href="https://github.com/Rainchen537/{p["repo"]}"><b>{p["title"]}</b></a><br />{p["desc"]}<br /><sub>{p["tech"]} / {p["platform"]}'+(f'<br />{p["note"]}' if 'note' in p else '')+'</sub></p>')
     parts.append('</details>')
     (ROOT/'README.md').write_text('\n\n'.join(parts)+'\n')
-    print('Generated README.md and 18 SVG assets; approved GIF animation left untouched.')
+    print('Generated README.md and 26 pixel SVG assets; GIF files left untouched.')
 
 
 if __name__=='__main__': main()

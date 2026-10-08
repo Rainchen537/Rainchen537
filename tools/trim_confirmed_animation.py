@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Surgically trim the user's approved GIF; never regenerate particle motion.
+"""Trim the approved GIF and replace only its BNBU artwork with a pixel wordmark.
 
 Requires Pillow. Originals are immutable in assets/pixel/source/confirmed-*.gif.
-Every retained frame is checked pixel-for-pixel outside the documented UI masks.
+All other scenes retain their original pixels outside the documented UI masks.
 """
 from pathlib import Path
 import hashlib
@@ -10,6 +10,7 @@ import json
 
 from PIL import Image, ImageChops, ImageDraw, GifImagePlugin
 from build_readme import GLYPHS
+import bnbu_wordmark
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'assets/pixel'
@@ -66,11 +67,18 @@ def patch(frame, owner, mobile, palette):
         pixel_text(draw,'06 SCENES',878,564,2,muted)
 
 
-def assert_untouched(original, patched, mobile):
+def assert_untouched(original, patched, mobile, source_index):
     diff = ImageChops.difference(original,patched.convert('RGB'))
     draw=ImageDraw.Draw(diff)
     for x0,y0,x1,y1 in MASKS[mobile]: draw.rectangle((x0,y0,x1-1,y1-1),fill=(0,0,0))
-    assert diff.getbbox() is None, 'Pixels changed outside the navigation/count masks'
+    if 130<=source_index<=201:
+        x0,y0,x1,y1=bnbu_wordmark.BOUNDS[mobile]
+        draw.rectangle((x0,y0,x1-1,y1-1),fill=(0,0,0))
+        extra=bnbu_wordmark.EXTRA_BOUNDS[mobile]
+        if extra:
+            x0,y0,x1,y1=extra
+            draw.rectangle((x0,y0,x1-1,y1-1),fill=(0,0,0))
+    assert diff.getbbox() is None, 'Pixels changed outside the permitted UI/BNBU rectangles'
 
 
 def trim(mobile):
@@ -80,6 +88,8 @@ def trim(mobile):
     im=Image.open(source)
     assert im.n_frames==504 and im.size==((600,740) if mobile else (1120,600))
     palette=im.getpalette()
+    backdrop=bnbu_wordmark.make_backdrop(im,mobile,palette)
+    word_pixels=bnbu_wordmark.word_pixels(mobile,palette)
     # Map the existing colors exactly; Pillow's quantizer uses an approximate LUT.
     by_rgb={tuple(palette[i:i+3]):i//3 for i in range(0,len(palette),3)}
     output=OUT/f'{name}.gif'
@@ -96,7 +106,8 @@ def trim(mobile):
             assert old_owner!=1, 'Independent ENTJ scene must not survive'
             owner=old_owner if old_owner==0 else old_owner-1
             patch(frame,owner,mobile,palette)
-            assert_untouched(original,frame,mobile)
+            bnbu_wordmark.replace(frame,original,source_index,mobile,backdrop,word_pixels)
+            assert_untouched(original,frame,mobile,source_index)
             if previous is None:
                 header,_=GifImagePlugin.getheader(frame,palette=bytes(palette),info={'loop':0,'optimize':False})
                 for block in header: fp.write(block)
@@ -114,12 +125,16 @@ def trim(mobile):
     for i, source_index in enumerate(KEEP):
         delivered.seek(i);im.seek(source_index)
         assert delivered.info['duration']==50
-        assert_untouched(im.convert('RGB'),delivered,mobile)
+        assert_untouched(im.convert('RGB'),delivered,mobile,source_index)
     return {'source':source.name,'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),
             'output':output.name,'output_sha256':hashlib.sha256(output.read_bytes()).hexdigest(),
             'source_frames':504,'output_frames':len(KEEP),'frame_duration_ms':50,
             'removed_source_frames_inclusive':[58,129], 'kept_duration_ms':len(KEEP)*50,
-            'modified_rectangles_xyxy':MASKS[mobile], 'outside_masks':'pixel-identical for every retained frame'}
+            'modified_rectangles_xyxy':MASKS[mobile],
+            'bnbu_wordmark_source_frames_inclusive':[130,201],
+            'bnbu_wordmark_rectangle_xyxy':bnbu_wordmark.BOUNDS[mobile],
+            'bnbu_wordmark_extra_rectangle_xyxy':bnbu_wordmark.EXTRA_BOUNDS[mobile],
+            'outside_masks':'pixel-identical; BNBU artwork rectangle excepted only in its 72 scene frames'}
 
 
 if __name__=='__main__':

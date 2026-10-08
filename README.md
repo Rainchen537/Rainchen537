@@ -9,9 +9,7 @@
 </picture>
 </p>
 
-<p align="center"><b>Rainchen / Li Xingchen</b><br /><sub>Independent developer</sub></p>
-
-<p align="center"><a href="#tech-stack">Tech stack</a> · <a href="#selected-projects">Projects</a> · <a href="https://bnbu.me/">BNBU.ME</a> · <a href="./assets/pixel/hero-poster.png">Still cover</a></p>
+<p align="center"><a href="#tech-stack"><img src="./assets/pixel/link-tech-stack.svg" width="105" height="18" alt="Tech Stack" /></a> &nbsp; <a href="#selected-projects"><img src="./assets/pixel/link-projects.svg" width="85" height="18" alt="Projects" /></a> &nbsp; <a href="https://bnbu.me/"><img src="./assets/pixel/link-website.svg" width="75" height="18" alt="BNBU.ME website" /></a> &nbsp; <a href="./assets/pixel/hero-poster.png"><img src="./assets/pixel/link-still-cover.svg" width="115" height="18" alt="Still Cover" /></a></p>
 
 <a name="tech-stack"></a>
 
@@ -39,7 +37,7 @@
 </picture>
 </a>
 
-<p align="right"><sub><a href="https://github.com/Rainchen537/BNBUME-client">Source</a> · <a href="https://bnbu.me/">Website</a></sub></p>
+<p align="right"><a href="https://github.com/Rainchen537/BNBUME-client"><img src="./assets/pixel/link-source.svg" width="51" height="14" alt="Source" /></a> &nbsp; <a href="https://bnbu.me/"><img src="./assets/pixel/link-website.svg" width="59" height="14" alt="Website" /></a></p>
 
 <a href="https://github.com/Rainchen537/Y-Clip">
 <picture>
@@ -48,7 +46,7 @@
 </picture>
 </a>
 
-<p align="right"><sub><a href="https://github.com/Rainchen537/Y-Clip">Source</a> · <a href="https://github.com/Rainchen537/Y-Clip/releases">Releases</a></sub></p>
+<p align="right"><a href="https://github.com/Rainchen537/Y-Clip"><img src="./assets/pixel/link-source.svg" width="51" height="14" alt="Source" /></a> &nbsp; <a href="https://github.com/Rainchen537/Y-Clip/releases"><img src="./assets/pixel/link-releases.svg" width="66" height="14" alt="Releases" /></a></p>
 
 <a href="https://github.com/Rainchen537/Y-Dock">
 <picture>
@@ -57,7 +55,7 @@
 </picture>
 </a>
 
-<p align="right"><sub><a href="https://github.com/Rainchen537/Y-Dock">Source</a> · <a href="https://github.com/Rainchen537/Y-Dock/releases">Releases</a></sub></p>
+<p align="right"><a href="https://github.com/Rainchen537/Y-Dock"><img src="./assets/pixel/link-source.svg" width="51" height="14" alt="Source" /></a> &nbsp; <a href="https://github.com/Rainchen537/Y-Dock/releases"><img src="./assets/pixel/link-releases.svg" width="66" height="14" alt="Releases" /></a></p>
 
 <a href="https://github.com/Rainchen537/Y-Keys">
 <picture>
@@ -66,7 +64,7 @@
 </picture>
 </a>
 
-<p align="right"><sub><a href="https://github.com/Rainchen537/Y-Keys">Source</a> · <a href="https://github.com/Rainchen537/Y-Keys/releases">Releases</a></sub></p>
+<p align="right"><a href="https://github.com/Rainchen537/Y-Keys"><img src="./assets/pixel/link-source.svg" width="51" height="14" alt="Source" /></a> &nbsp; <a href="https://github.com/Rainchen537/Y-Keys/releases"><img src="./assets/pixel/link-releases.svg" width="66" height="14" alt="Releases" /></a></p>
 
 <a href="https://github.com/Rainchen537/Dungeons2-LanDirect">
 <picture>
@@ -75,7 +73,7 @@
 </picture>
 </a>
 
-<p align="right"><sub><a href="https://github.com/Rainchen537/Dungeons2-LanDirect">Source</a> · <a href="https://github.com/Rainchen537/Dungeons2-LanDirect#readme">Compatibility</a></sub></p>
+<p align="right"><a href="https://github.com/Rainchen537/Dungeons2-LanDirect"><img src="./assets/pixel/link-source.svg" width="51" height="14" alt="Source" /></a> &nbsp; <a href="https://github.com/Rainchen537/Dungeons2-LanDirect#readme"><img src="./assets/pixel/link-compatibility.svg" width="104" height="14" alt="Compatibility" /></a></p>
 
 <picture>
   <source media="(max-width: 600px)" srcset="./assets/pixel/footer-mobile.svg" />
@@ -83,7 +81,7 @@
 </picture>
 
 <details>
-<summary>Text version</summary>
+<summary><img src="./assets/pixel/link-text-version.svg" width="97" height="14" alt="Text Version" /></summary>
 <p><b>Rainchen / Li Xingchen</b> — Independent developer. ENTJ is a self-described personality label.</p>
 
 <p><a href="https://github.com/Rainchen537/BNBUME-client"><b>BNBU.ME</b></a><br />Timetables, deadlines, mail and campus tools.<br /><sub>Flutter / Dart / iOS / Android / macOS / Windows<br />Unofficial client / Desktop preview</sub></p>
