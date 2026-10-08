@@ -2,16 +2,16 @@
 
 <p align="center">
 <picture>
-  <source media="(prefers-reduced-motion: reduce) and (max-width: 600px)" srcset="./assets/pixel/hero-mobile-poster.svg" />
-  <source media="(prefers-reduced-motion: reduce)" srcset="./assets/pixel/hero-poster.svg" />
-  <source media="(max-width: 600px)" srcset="./assets/pixel/hero-mobile.svg" />
-  <img src="./assets/pixel/hero.svg" width="1120" alt="Rainchen / Li Xingchen — independent developer. A pixel portrait and a rotating selection of apps, macOS tools and game mods." />
+  <source media="(prefers-reduced-motion: reduce) and (max-width: 600px)" srcset="./assets/pixel/hero-mobile-poster.png" />
+  <source media="(prefers-reduced-motion: reduce)" srcset="./assets/pixel/hero-poster.png" />
+  <source media="(max-width: 600px)" srcset="./assets/pixel/hero-mobile.gif" />
+  <img src="./assets/pixel/hero.gif" width="1120" alt="Rainchen / Li Xingchen — independent developer. A pixel portrait with ENTJ, followed by five projects in the original particle animation." />
 </picture>
 </p>
 
 <p align="center"><b>Rainchen / Li Xingchen</b><br /><sub>Independent developer</sub></p>
 
-<p align="center"><a href="#tech-stack">Tech stack</a> · <a href="#selected-projects">Projects</a> · <a href="https://bnbu.me/">BNBU.ME</a> · <a href="./assets/pixel/hero-poster.svg">Still cover</a></p>
+<p align="center"><a href="#tech-stack">Tech stack</a> · <a href="#selected-projects">Projects</a> · <a href="https://bnbu.me/">BNBU.ME</a> · <a href="./assets/pixel/hero-poster.png">Still cover</a></p>
 
 <a name="tech-stack"></a>
 

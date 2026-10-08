@@ -3,7 +3,6 @@
 from pathlib import Path
 import base64
 import html
-import random
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -169,117 +168,17 @@ def stack(mobile):
     return svg(w,h,'Swift / AppKit, Dart / Flutter, C# / .NET, Python / Git / Shell',s)
 
 
-def pixel_assembly(art, key, scene, bounds, cycle):
-    """Move independently clipped pixel blocks; never cross-fade a whole image."""
-    x, y, w, h = bounds
-    rng = random.Random(537 + scene)
-    cell = 16
-    s = f'<defs><g id="art-{key}">{art}</g></defs><g class="assembly assembly-{scene}">'
-    for row, ty in enumerate(range(0, h, cell)):
-        for col, tx in enumerate(range(0, w, cell)):
-            tile = f'{key}-{row}-{col}'
-            dx, dy = rng.randrange(-128, 129, 8), rng.randrange(-104, 105, 8)
-            delay = -cycle + scene * 4.4 - .85 + rng.randrange(0, 21) / 100
-            tw, th = min(cell, w-tx), min(cell, h-ty)
-            s += f'<clipPath id="tile-{tile}"><rect x="{x+tx}" y="{y+ty}" width="{tw+.35}" height="{th+.35}"/></clipPath>'
-            s += '<g class="pixel">'
-            s += f'<animateTransform attributeName="transform" type="translate" values="{dx} {dy};0 0;0 0;{dx} {dy};{dx} {dy}" keyTimes="0;.023;.116;.162;1" dur="{cycle:g}s" begin="{delay:.2f}s" repeatCount="indefinite"/>'
-            s += f'<animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.023;.116;.162;1" dur="{cycle:g}s" begin="{delay:.2f}s" repeatCount="indefinite"/>'
-            s += f'<g clip-path="url(#tile-{tile})"><use href="#art-{key}"/></g></g>'
-    return s + '</g>'
-
-
-def hero(mobile=False, animated=True):
-    w,h = (600,740) if mobile else (1120,600)
-    s = panel(3,4,w-6,h-8,BG,14)
-    if mobile:
-        s += px('RAINCHEN',30,31,5) + px('ENTJ',445,38,3,'#edce8b')
-        s += px('INDEPENDENT DEVELOPER',32,88,2,MUTED)
-        s += f'<path d="M30 125H570" stroke="{LINE}"/>'
-        stage_x,stage_y,stage_w,stage_h = 28,158,544,455
-        cx,cy = 300,382
-    else:
-        s += px('RAINCHEN / PERSONAL BUILD LOG',38,32,2,'#73829d')
-        s += px('APPS / TOOLS / MODS',778,32,2,'#73829d')
-        s += f'<path d="M36 69H1084M36 540H1084" stroke="{LINE}"/>'
-        s += px('INDEPENDENT DEVELOPER',48,111,2,PURPLE)
-        s += px('RAINCHEN',43,147,7)
-        s += text('Li Xingchen / ENTJ',48,233,21,'#edce8b')
-        s += text('Independent apps, tools and game mods.',48,262,16,MUTED)
-        s += f'<path d="M48 293H430" stroke="{LINE}"/>'
-        s += px('> BUILD / ITERATE / SHIP',48,564,2,CYAN)
-        stage_x,stage_y,stage_w,stage_h = 491,89,581,423
-        cx,cy = 782,288
-    s += panel(stage_x,stage_y,stage_w,stage_h,'#0d1222',12)
-    # Static stage texture is vector artwork, independent of the moving scenes.
-    for j in range(42):
-        x=stage_x+18+(j*73)%(stage_w-36); y=stage_y+20+(j*47)%(stage_h-40)
-        s += f'<rect x="{x}" y="{y}" width="1" height="1" fill="#43516e"/>'
-    s += f'<ellipse cx="{cx}" cy="{cy+20}" rx="210" ry="105" fill="#0c1118" stroke="#28354b"/>'
-    s += f'<ellipse cx="{cx}" cy="{cy+20}" rx="180" ry="128" fill="none" stroke="#28354b" transform="rotate(-20 {cx} {cy+20})"/>'
-    s += px('PIXEL ASSEMBLY',stage_x+20,stage_y+18,2,'#73829d')
-    names=['PERSONA','BNBU.ME','Y-CLIP','Y-DOCK','Y-KEYS','LANDIRECT']
-    labels=['LI XINGCHEN','BNBU.ME','Y-CLIP','Y-DOCK','Y-KEYS','LANDIRECT']
-    captions=['APPS / TOOLS / MODS','CAMPUS CLIENT / FLUTTER','CLIPBOARD / MACOS','WINDOWS / MACOS','SHORTCUTS / MACOS','LAN MOD / EXPERIMENTAL']
-    count = len(names)
-    duration = count * 4.4
-    if animated:
-        s += '<style>'
-        for i in range(count):
-            start=i*100/count; end=(i+1)*100/count
-            # Scene labels track the independently assembling artwork.
-            if i == 0:
-                stops=f'0%,{end-1:.4f}%{{opacity:1}} {end:.4f}%,99%{{opacity:0}} 100%{{opacity:1}}'
-            else:
-                stops=f'0%,{start-.01:.4f}%{{opacity:0}} {start+1:.4f}%,{end-1:.4f}%{{opacity:1}} {end:.4f}%,100%{{opacity:0}}'
-            s += f'@keyframes scene{i}{{{stops}}}.scene{i}{{opacity:{1 if i==0 else 0};animation:scene{i} {duration}s linear infinite;animation-delay:-.8s}}'
-        s += '@media(prefers-reduced-motion:reduce){.scene{animation:none!important;opacity:0!important}.scene0{opacity:1!important}.assembly{display:none}.assembly-0{display:inline}.pixel{animation:none!important;opacity:1!important;transform:none!important}}</style>'
-    s += f'<defs><clipPath id="stage-crop"><rect x="{stage_x+2}" y="{stage_y+40}" width="{stage_w-4}" height="{stage_h-74}"/></clipPath></defs>'
-    for i,name in enumerate(names):
-        if not animated and i: break
-        color=['#edce8b',PURPLE,'#f19fd5',CYAN,'#96edc2','#edce8b'][i]
-        if i==0:
-            # Reuse the supplied portrait pixels, cropped by an SVG viewport.
-            art = f'<svg x="{cx-180}" y="{cy-186}" width="360" height="372" viewBox="602 99 360 372">'
-            art += '<defs><clipPath id="portrait-crop"><path d="M710 99H962V471H602V145H710Z"/></clipPath></defs><g clip-path="url(#portrait-crop)">'
-            art += image(SOURCE/'portrait-scene.png',0,0,1120,600)+'</g></svg>'
-            bounds = (cx-180,cy-186,360,372)
-        else:
-            art = icon(PROJECTS[i-1]['id'],cx-112,cy-112,224)
-            bounds = (cx-112,cy-112,224,224)
-        s += '<g clip-path="url(#stage-crop)">'
-        s += pixel_assembly(art,str(i),i,bounds,duration) if animated else art
-        s += '</g>'
-        s += f'<g class="scene scene{i}">'
-        s += px(f'0{i+1}/0{count}',stage_x+stage_w-78,stage_y+20,2,color)
-        if mobile:
-            label_size=4
-            s += px(labels[i],cx-(len(labels[i])*6-1)*label_size/2,635,label_size,color)
-            s += px(captions[i],cx-(len(captions[i])*6-1),683,2,MUTED)
-            for j in range(count):
-                s += f'<rect x="{223+j*28}" y="711" width="18" height="5" fill="{color if j==i else LINE}"/>'
-        else:
-            label_size=3
-            s += px(labels[i],cx-(len(labels[i])*6-1)*label_size/2,476,label_size,color)
-            s += px(captions[i],cx-(len(captions[i])*6-1),516,2,MUTED)
-            s += f'<rect x="47" y="{310+i*27}" width="383" height="25" fill="#242540"/>'
-            s += f'<rect x="47" y="{310+i*27}" width="4" height="25" fill="{color}"/>'
-        s += '</g>'
-    if not mobile:
-        for i,name in enumerate(names): s += px(f'0{i+1} {name}',60,315+i*27,2,MUTED)
-    return svg(w,h,'Rainchen / Li Xingchen — independent developer, apps, tools and game mods',s)
-
-
 def picture(name, alt):
     return f'<picture>\n  <source media="(max-width: 600px)" srcset="./assets/pixel/{name}-mobile.svg" />\n  <img src="./assets/pixel/{name}.svg" width="1120" alt="{html.escape(alt,quote=True)}" />\n</picture>'
 
 
 def main():
     OUT.mkdir(parents=True,exist_ok=True)
+    for name in ('hero.gif','hero-mobile.gif','hero-poster.png','hero-mobile-poster.png'):
+        if not (OUT/name).is_file():
+            raise FileNotFoundError(f'{name}: run tools/trim_confirmed_animation.py with Pillow first')
     for mobile in (False,True):
         suffix='-mobile' if mobile else ''
-        write(f'hero{suffix}.svg',hero(mobile))
-        write(f'hero{suffix}-poster.svg',hero(mobile,False))
         write(f'section-stack{suffix}.svg',section('TECH STACK',mobile))
         write(f'section-projects{suffix}.svg',section('SELECTED PROJECTS',mobile))
         write(f'stack{suffix}.svg',stack(mobile))
@@ -287,9 +186,9 @@ def main():
         w=600 if mobile else 1120
         write(f'footer{suffix}.svg',svg(w,64,'Rainchen / GitHub',f'<path d="M0 1H{w}" stroke="{LINE}"/>'+px('RAINCHEN / GITHUB',12,28,2,'#73829d')))
     parts=['<!-- Generated by tools/build_readme.py. Edit the generator and source artwork. -->',
-        '<p align="center">\n<picture>\n  <source media="(prefers-reduced-motion: reduce) and (max-width: 600px)" srcset="./assets/pixel/hero-mobile-poster.svg" />\n  <source media="(prefers-reduced-motion: reduce)" srcset="./assets/pixel/hero-poster.svg" />\n  <source media="(max-width: 600px)" srcset="./assets/pixel/hero-mobile.svg" />\n  <img src="./assets/pixel/hero.svg" width="1120" alt="Rainchen / Li Xingchen — independent developer. A pixel portrait and a rotating selection of apps, macOS tools and game mods." />\n</picture>\n</p>',
+        '<p align="center">\n<picture>\n  <source media="(prefers-reduced-motion: reduce) and (max-width: 600px)" srcset="./assets/pixel/hero-mobile-poster.png" />\n  <source media="(prefers-reduced-motion: reduce)" srcset="./assets/pixel/hero-poster.png" />\n  <source media="(max-width: 600px)" srcset="./assets/pixel/hero-mobile.gif" />\n  <img src="./assets/pixel/hero.gif" width="1120" alt="Rainchen / Li Xingchen — independent developer. A pixel portrait with ENTJ, followed by five projects in the original particle animation." />\n</picture>\n</p>',
         '<p align="center"><b>Rainchen / Li Xingchen</b><br /><sub>Independent developer</sub></p>',
-        '<p align="center"><a href="#tech-stack">Tech stack</a> · <a href="#selected-projects">Projects</a> · <a href="https://bnbu.me/">BNBU.ME</a> · <a href="./assets/pixel/hero-poster.svg">Still cover</a></p>',
+        '<p align="center"><a href="#tech-stack">Tech stack</a> · <a href="#selected-projects">Projects</a> · <a href="https://bnbu.me/">BNBU.ME</a> · <a href="./assets/pixel/hero-poster.png">Still cover</a></p>',
         '<a name="tech-stack"></a>',picture('section-stack','Tech stack'),
         picture('stack','Swift / AppKit, Dart / Flutter, C# / .NET, Python / Git / Shell'),
         '<a name="selected-projects"></a>',picture('section-projects','Selected projects')]
@@ -304,7 +203,7 @@ def main():
         parts.append(f'<p><a href="https://github.com/Rainchen537/{p["repo"]}"><b>{p["title"]}</b></a><br />{p["desc"]}<br /><sub>{p["tech"]} / {p["platform"]}'+(f'<br />{p["note"]}' if 'note' in p else '')+'</sub></p>')
     parts.append('</details>')
     (ROOT/'README.md').write_text('\n\n'.join(parts)+'\n')
-    print('Generated README.md and 22 SVG assets.')
+    print('Generated README.md and 18 SVG assets; approved GIF animation left untouched.')
 
 
 if __name__=='__main__': main()
