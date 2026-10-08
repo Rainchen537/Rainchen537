@@ -3,6 +3,7 @@
 from pathlib import Path
 import base64
 import html
+import random
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -168,6 +169,26 @@ def stack(mobile):
     return svg(w,h,'Swift / AppKit, Dart / Flutter, C# / .NET, Python / Git / Shell',s)
 
 
+def pixel_assembly(art, key, scene, bounds, cycle):
+    """Move independently clipped pixel blocks; never cross-fade a whole image."""
+    x, y, w, h = bounds
+    rng = random.Random(537 + scene)
+    cell = 16
+    s = f'<defs><g id="art-{key}">{art}</g></defs><g class="assembly assembly-{scene}">'
+    for row, ty in enumerate(range(0, h, cell)):
+        for col, tx in enumerate(range(0, w, cell)):
+            tile = f'{key}-{row}-{col}'
+            dx, dy = rng.randrange(-128, 129, 8), rng.randrange(-104, 105, 8)
+            delay = -cycle + scene * 4.4 - .85 + rng.randrange(0, 21) / 100
+            tw, th = min(cell, w-tx), min(cell, h-ty)
+            s += f'<clipPath id="tile-{tile}"><rect x="{x+tx}" y="{y+ty}" width="{tw+.35}" height="{th+.35}"/></clipPath>'
+            s += '<g class="pixel">'
+            s += f'<animateTransform attributeName="transform" type="translate" values="{dx} {dy};0 0;0 0;{dx} {dy};{dx} {dy}" keyTimes="0;.023;.116;.162;1" dur="{cycle:g}s" begin="{delay:.2f}s" repeatCount="indefinite"/>'
+            s += f'<animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.023;.116;.162;1" dur="{cycle:g}s" begin="{delay:.2f}s" repeatCount="indefinite"/>'
+            s += f'<g clip-path="url(#tile-{tile})"><use href="#art-{key}"/></g></g>'
+    return s + '</g>'
+
+
 def hero(mobile=False, animated=True):
     w,h = (600,740) if mobile else (1120,600)
     s = panel(3,4,w-6,h-8,BG,14)
@@ -197,42 +218,46 @@ def hero(mobile=False, animated=True):
     s += f'<ellipse cx="{cx}" cy="{cy+20}" rx="210" ry="105" fill="#0c1118" stroke="#28354b"/>'
     s += f'<ellipse cx="{cx}" cy="{cy+20}" rx="180" ry="128" fill="none" stroke="#28354b" transform="rotate(-20 {cx} {cy+20})"/>'
     s += px('PIXEL ASSEMBLY',stage_x+20,stage_y+18,2,'#73829d')
-    duration = 28
+    names=['PERSONA','BNBU.ME','Y-CLIP','Y-DOCK','Y-KEYS','LANDIRECT']
+    labels=['LI XINGCHEN','BNBU.ME','Y-CLIP','Y-DOCK','Y-KEYS','LANDIRECT']
+    captions=['APPS / TOOLS / MODS','CAMPUS CLIENT / FLUTTER','CLIPBOARD / MACOS','WINDOWS / MACOS','SHORTCUTS / MACOS','LAN MOD / EXPERIMENTAL']
+    count = len(names)
+    duration = count * 4.4
     if animated:
         s += '<style>'
-        for i in range(7):
-            start=i*100/7; end=(i+1)*100/7
-            # Opacity transitions remain local to each scene; no script or external fonts.
+        for i in range(count):
+            start=i*100/count; end=(i+1)*100/count
+            # Scene labels track the independently assembling artwork.
             if i == 0:
                 stops=f'0%,{end-1:.4f}%{{opacity:1}} {end:.4f}%,99%{{opacity:0}} 100%{{opacity:1}}'
             else:
                 stops=f'0%,{start-.01:.4f}%{{opacity:0}} {start+1:.4f}%,{end-1:.4f}%{{opacity:1}} {end:.4f}%,100%{{opacity:0}}'
-            s += f'@keyframes scene{i}{{{stops}}}.scene{i}{{opacity:{1 if i==0 else 0};animation:scene{i} {duration}s linear infinite}}'
-        s += '@media(prefers-reduced-motion:reduce){.scene{animation:none!important;opacity:0!important}.scene0{opacity:1!important}}</style>'
-    names=['PERSONA','ENTJ','BNBU.ME','Y-CLIP','Y-DOCK','Y-KEYS','LANDIRECT']
-    labels=['LI XINGCHEN','ENTJ','BNBU.ME','Y-CLIP','Y-DOCK','Y-KEYS','LANDIRECT']
-    captions=['APPS / TOOLS / MODS','PERSONALITY','CAMPUS CLIENT / FLUTTER','CLIPBOARD / MACOS','WINDOWS / MACOS','SHORTCUTS / MACOS','LAN MOD / EXPERIMENTAL']
+            s += f'@keyframes scene{i}{{{stops}}}.scene{i}{{opacity:{1 if i==0 else 0};animation:scene{i} {duration}s linear infinite;animation-delay:-.8s}}'
+        s += '@media(prefers-reduced-motion:reduce){.scene{animation:none!important;opacity:0!important}.scene0{opacity:1!important}.assembly{display:none}.assembly-0{display:inline}.pixel{animation:none!important;opacity:1!important;transform:none!important}}</style>'
+    s += f'<defs><clipPath id="stage-crop"><rect x="{stage_x+2}" y="{stage_y+40}" width="{stage_w-4}" height="{stage_h-74}"/></clipPath></defs>'
     for i,name in enumerate(names):
         if not animated and i: break
-        color=['#edce8b',PURPLE,PURPLE,'#f19fd5',CYAN,'#96edc2','#edce8b'][i]
-        s += f'<g class="scene scene{i}">'
-        s += px(f'0{i+1}/07',stage_x+stage_w-78,stage_y+20,2,color)
+        color=['#edce8b',PURPLE,'#f19fd5',CYAN,'#96edc2','#edce8b'][i]
         if i==0:
             # Reuse the supplied portrait pixels, cropped by an SVG viewport.
-            s += f'<svg x="{cx-180}" y="{cy-186}" width="360" height="372" viewBox="602 99 360 372">'
-            s += '<defs><clipPath id="portrait-crop"><path d="M710 99H962V471H602V145H710Z"/></clipPath></defs><g clip-path="url(#portrait-crop)">'
-            s += image(SOURCE/'portrait-scene.png',0,0,1120,600)+'</g></svg>'
-        elif i==1:
-            s += px('ENTJ',cx-155,cy-34,13,color)
-            s += text('Li Xingchen',cx,cy+57,22,MUTED,anchor='middle')
+            art = f'<svg x="{cx-180}" y="{cy-186}" width="360" height="372" viewBox="602 99 360 372">'
+            art += '<defs><clipPath id="portrait-crop"><path d="M710 99H962V471H602V145H710Z"/></clipPath></defs><g clip-path="url(#portrait-crop)">'
+            art += image(SOURCE/'portrait-scene.png',0,0,1120,600)+'</g></svg>'
+            bounds = (cx-180,cy-186,360,372)
         else:
-            s += icon(PROJECTS[i-2]['id'],cx-112,cy-112,224)
+            art = icon(PROJECTS[i-1]['id'],cx-112,cy-112,224)
+            bounds = (cx-112,cy-112,224,224)
+        s += '<g clip-path="url(#stage-crop)">'
+        s += pixel_assembly(art,str(i),i,bounds,duration) if animated else art
+        s += '</g>'
+        s += f'<g class="scene scene{i}">'
+        s += px(f'0{i+1}/0{count}',stage_x+stage_w-78,stage_y+20,2,color)
         if mobile:
             label_size=4
             s += px(labels[i],cx-(len(labels[i])*6-1)*label_size/2,635,label_size,color)
             s += px(captions[i],cx-(len(captions[i])*6-1),683,2,MUTED)
-            for j in range(7):
-                s += f'<rect x="{209+j*28}" y="711" width="18" height="5" fill="{color if j==i else LINE}"/>'
+            for j in range(count):
+                s += f'<rect x="{223+j*28}" y="711" width="18" height="5" fill="{color if j==i else LINE}"/>'
         else:
             label_size=3
             s += px(labels[i],cx-(len(labels[i])*6-1)*label_size/2,476,label_size,color)
